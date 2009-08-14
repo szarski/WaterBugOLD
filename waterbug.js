@@ -23,7 +23,7 @@ WaterBug.load = function() {
   WaterBug.display_wrapper.insert(WaterBug.label, {position:'bottom'});
   document.body.insert(WaterBug.display_wrapper, {position:'bottom'});
   WaterBug.display1.innerHTML = '<textarea id="water_bug_command_history" style="width: 400px; height: 200px;"></textarea><input type="text" id="water_bug_command_line" style="width: 300px;" /><input type="submit" id="water_bug_command_button" />';
-  WaterBug.display2.innerHTML = '<a href="#" id="water_bug_inspect_button">INSPECT</a><br /><p id="wb_object_name" style="font-size:10px;"></p><br /><input type="text" id="water_bug_property_name" /><input type="text" id="water_bug_property_value" />';
+  WaterBug.display2.innerHTML = '<a href="#" id="water_bug_inspect_button">INSPECT</a><br /><p id="wb_object_name" style="font-size:10px;"></p><br /><input type="text" id="water_bug_property_name" /><input type="text" id="water_bug_property_value" /><a onclick="WaterBug.inspect_property();">refresh</a>';
 
   /******* initialize the cool stuff *******/
 
@@ -82,13 +82,21 @@ WaterBug.run = function(event, command) {
   WaterBug.command_history.scrollTop=WaterBug.command_history.scrollHeight;
 }
 WaterBug.toggle_inspect_mode = function () {
+  var elements = $$('div').concat($$('p')).concat($$('input')).concat($$('span')).concat($$('a'));
   if (WaterBug.inspect_mode) { //Turn inspect mode off
     WaterBug.inspect_mode = 0;
-    WaterBug.inspect_button.value="STOP INSPECTING";
+    WaterBug.inspect_button.value="INSPECT";
+    elements.each (function(element) {
+      if ((element.id != 'water_bug_display_wrapper') && (!element.descendantOf('water_bug_display_wrapper'))) {
+        element.onclick = null;
+        element.onmouseover = null;
+        element.onmouseout = null;
+      }
+    });
   } else { // Turn inspect mode on
     WaterBug.inspect_mode = 1;
-    WaterBug.inspect_button.value="INSPECT";
-    $$('div').each (function(element) {
+    WaterBug.inspect_button.value="STOP INSPECTING";
+    elements.each (function(element) {
       if ((element.id != 'water_bug_display_wrapper') && (!element.descendantOf('water_bug_display_wrapper'))) {
         element.onclick = function() {
           WaterBug.inspect(this);
