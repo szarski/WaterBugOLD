@@ -23,7 +23,7 @@ WaterBug.load = function() {
   WaterBug.display_wrapper.insert(WaterBug.label, {position:'bottom'});
   document.body.insert(WaterBug.display_wrapper, {position:'bottom'});
   WaterBug.display1.innerHTML = '<textarea id="water_bug_command_history" style="width: 400px; height: 200px;"></textarea><input type="text" id="water_bug_command_line" style="width: 300px;" /><input type="submit" id="water_bug_command_button" />';
-  WaterBug.display2.innerHTML = '<a href="#" id="water_bug_inspect_button">INSPECT</a><br /><p id="wb_object_name"></p>';
+  WaterBug.display2.innerHTML = '<a href="#" id="water_bug_inspect_button">INSPECT</a><br /><p id="wb_object_name" style="font-size:10px;"></p>';
 
   /******* initialize the cool stuff *******/
 
@@ -75,7 +75,7 @@ WaterBug.inspect = function(element) {
     var element_tree = '';
     var current_element = element;
     while ((current_element) && (current_element.identify)) {
-      element_tree = ' > ' + current_element.tagName + '#' + current_element.identify() + element_tree;
+      element_tree = ' > <span style="color:#0A0;">' + current_element.tagName + '</span><span style="color:#F00;">#</span>' + current_element.identify() + element_tree;
       current_element = current_element.up();
     }
     WaterBug.display2.down('p').innerHTML = element_tree;
