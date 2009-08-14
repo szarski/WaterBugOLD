@@ -100,7 +100,7 @@ WaterBug.inspect = function(element) {
     var element_tree = '';
     var current_element = element;
     while ((current_element) && (current_element.identify)) {
-      element_tree = ' > <span style="color:#0A0;">' + current_element.tagName + '</span><span style="color:#F00;">#</span>' + current_element.identify() + element_tree;
+      element_tree = ' > <span style="color:#0A0;">' + current_element.tagName + '</span><span style="color:#F00;">#</span><a onclick="WaterBug.inspect($(\''+current_element.identify()+'\'))">' + current_element.identify() +'</a>'+ element_tree;
       current_element = current_element.up();
     }
     WaterBug.display2.down('p').innerHTML = element_tree;
