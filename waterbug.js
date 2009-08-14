@@ -23,7 +23,7 @@ WaterBug.load = function() {
   WaterBug.display_wrapper.insert(WaterBug.label, {position:'bottom'});
   document.body.insert(WaterBug.display_wrapper, {position:'bottom'});
   WaterBug.display1.innerHTML = '<textarea id="water_bug_command_history" style="width: 400px; height: 200px;"></textarea><input type="text" id="water_bug_command_line" style="width: 300px;" /><input type="submit" id="water_bug_command_button" />';
-  WaterBug.display2.innerHTML = '<a href="#" id="water_bug_inspect_button">INSPECT</a><br /><p id="wb_object_name" style="font-size:10px;"></p>';
+  WaterBug.display2.innerHTML = '<a href="#" id="water_bug_inspect_button">INSPECT</a><br /><p id="wb_object_name" style="font-size:10px;"></p><br /><input type="text" id="water_bug_property_name" /><input type="text" id="water_bug_property_value" />';
 
   /******* initialize the cool stuff *******/
 
@@ -31,8 +31,31 @@ WaterBug.load = function() {
   WaterBug.command_line = $('water_bug_command_line');
   WaterBug.command_history = $('water_bug_command_history');
   WaterBug.inspect_button = $('water_bug_inspect_button');
+  WaterBug.property_name_field = $('water_bug_property_name');
+  WaterBug.property_value_field = $('water_bug_property_value');
   WaterBug.command_button.onclick = WaterBug.run;
   WaterBug.inspect_button.onclick = WaterBug.toggle_inspect_mode;
+  WaterBug.property_name_field.onchange = WaterBug.inspect_property;
+  WaterBug.property_name_field.onkeyup =  WaterBug.inspect_property;
+  WaterBug.property_value_field.onchange = WaterBug.set_property;
+  WaterBug.property_value_field.onkeyup =  WaterBug.set_property;
+}
+WaterBug.inspect_property = function() {
+  var property_name = WaterBug.property_name_field.value;
+//  var command = 'WaterBug.selected_element.style.' + property_name;
+//  if ((command.length > 0) && (WaterBug.selected_element) && (WaterBug.selected_element.style)) // && (WaterBug.selected_element.)
+  //  WaterBug.property_value_field.value = eval(command);
+  if ((property_name.length > 0) && (WaterBug.selected_element))
+    WaterBug.property_value_field.value = WaterBug.selected_element.getStyle(property_name);
+  else
+    WaterBug.property_value_field.value = '???';
+}
+WaterBug.set_property = function() {
+  var property_name = WaterBug.property_name_field.value;
+  var property_value = WaterBug.property_value_field.value;
+  var command = 'WaterBug.selected_element.style.' + property_name + '="'+property_value+'"';
+  if ((command.length > 0) && (WaterBug.selected_element) && (WaterBug.selected_element.style))
+    WaterBug.property_value_field.value = eval(command);
 }
 WaterBug.unload = function() {
   WaterBug.display_wrapper.remove();
@@ -50,6 +73,7 @@ WaterBug.run = function(event, command) {
   }
   var hist = command + "\n= " + eval(command) + "\n\n";
   WaterBug.command_history.value += hist;
+  WaterBug.command_history.scrollTop=WaterBug.command_history.scrollHeight;
 }
 WaterBug.toggle_inspect_mode = function () {
   if (WaterBug.inspect_mode) { //Turn inspect mode off
@@ -72,6 +96,7 @@ WaterBug.toggle_inspect_mode = function () {
 WaterBug.inspect = function(element) {
   if ((!WaterBug.skip_inspecting) || (new Date - WaterBug.skip_inspecting > 500)) {
     WaterBug.skip_inspecting = new Date;
+    WaterBug.selected_element = element;
     var element_tree = '';
     var current_element = element;
     while ((current_element) && (current_element.identify)) {
