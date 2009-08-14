@@ -45,9 +45,10 @@ WaterBug.inspect_property = function() {
 //  var command = 'WaterBug.selected_element.style.' + property_name;
 //  if ((command.length > 0) && (WaterBug.selected_element) && (WaterBug.selected_element.style)) // && (WaterBug.selected_element.)
   //  WaterBug.property_value_field.value = eval(command);
-  if ((property_name.length > 0) && (WaterBug.selected_element))
+  if ((property_name.length > 0) && (WaterBug.selected_element)) {
     WaterBug.property_value_field.value = WaterBug.selected_element.getStyle(property_name);
-  else
+    WaterBug.property_value_field.style.background = "#0F0"
+  } else
     WaterBug.property_value_field.value = '???';
 }
 WaterBug.set_property = function() {
@@ -55,7 +56,7 @@ WaterBug.set_property = function() {
   var property_value = WaterBug.property_value_field.value;
   var command = 'WaterBug.selected_element.style.' + property_name + '="'+property_value+'"';
   if ((command.length > 0) && (WaterBug.selected_element) && (WaterBug.selected_element.style))
-    WaterBug.property_value_field.value = eval(command);
+    try { WaterBug.property_value_field.value = eval(command); WaterBug.property_value_field.style.background = "#0F0"} catch(err) {WaterBug.property_value_field.style.background = "#F00"};
 }
 WaterBug.unload = function() {
   WaterBug.display_wrapper.remove();
@@ -71,7 +72,12 @@ WaterBug.run = function(event, command) {
     command = WaterBug.command_line.value;
     WaterBug.command_line.value = '';
   }
-  var hist = command + "\n= " + eval(command) + "\n\n";
+  var hist = '';
+  try {
+    hist = command + "\n= " + eval(command) + "\n\n";
+  } catch(err) {
+    hist = command + "\n! ERROR:" + err + "\n\n";
+  }
   WaterBug.command_history.value += hist;
   WaterBug.command_history.scrollTop=WaterBug.command_history.scrollHeight;
 }
