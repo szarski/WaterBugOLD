@@ -138,3 +138,7 @@ WaterBug.unhighlight = function(element) {
     element.original_border = null;
   }
 }
+
+WaterBug.load();
+
+alert('WaterBug loaded');
