@@ -1,0 +1,1 @@
+javascript:$$('head')[0].appendChild((Element('script',{type:'text/javascript',src:'http://github.com/szarski/WaterBug/raw/master/waterbug.js'})));alert('ok');
