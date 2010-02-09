@@ -41,9 +41,10 @@ WaterBug.load = function() {
   WaterBug.property_value_field.onkeyup =  WaterBug.set_property;
   WaterBug.latest_commands = [];
   WaterBug.latest_commands_index = 0;
-  WaterBug.command_line.onkeypress = WaterBug.handle_keys;
+  WaterBug.command_line.onkeydown = WaterBug.handle_keys;
 }
 WaterBug.handle_keys = function(event) {
+  event = event || window.event;
   if ((event.keyCode == 38) && (WaterBug.latest_commands_index > 0)) {
     WaterBug.latest_commands_index -= 1;
   }
@@ -87,17 +88,20 @@ WaterBug.run = function(event, command) {
     command = WaterBug.command_line.value;
     WaterBug.command_line.value = '';
   }
-  var hist = '';
-  try {
-    hist = command + "\n= " + eval(command) + "\n\n";
-  } catch(err) {
-    hist = command + "\n! ERROR:" + err + "\n\n";
+  if (command && !command == '') {
+    var hist = '';
+    try {
+      hist = command + "\n= " + eval(command) + "\n\n";
+    } catch(err) {
+      hist = command + "\n! ERROR:" + err + "\n\n";
+    }
+    WaterBug.command_history.value += hist;
+    WaterBug.command_history.scrollTop=WaterBug.command_history.scrollHeight;
+    WaterBug.latest_commands[WaterBug.latest_commands.size()] = command;
+    WaterBug.latest_commands_index = WaterBug.latest_commands.size();
+    WaterBug.command_line.focus();
+    setTimeout(WaterBug.command_line.focus, 100);
   }
-  WaterBug.command_history.value += hist;
-  WaterBug.command_history.scrollTop=WaterBug.command_history.scrollHeight;
-  WaterBug.latest_commands[WaterBug.latest_commands.size()] = command;
-  WaterBug.latest_commands_index = WaterBug.latest_commands.size();
-  WaterBug.command_line.focus();
 }
 WaterBug.toggle_inspect_mode = function () {
   var elements = $$('div').concat($$('p')).concat($$('input')).concat($$('span')).concat($$('a'));
