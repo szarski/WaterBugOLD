@@ -52,7 +52,7 @@ WaterBug.handle_keys = function(event) {
   }
   if ((event.keyCode == 38) || (event.keyCode == 40))
     WaterBug.command_line.value = WaterBug.latest_commands[WaterBug.latest_commands_index];
-  else
+  if (event.keyCode == 13)
     WaterBug.run();
 }
 WaterBug.inspect_property = function() {
