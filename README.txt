@@ -1,3 +1,8 @@
+This is an old version. The new one is being developed here:
+
+http://github.com/szarski/WaterBug
+
+
 Place this on the bottom of your layout:
 
 
